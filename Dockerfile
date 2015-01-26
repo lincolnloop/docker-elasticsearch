@@ -8,6 +8,7 @@
 FROM dockerfile/java:oracle-java7
 
 ENV ES_PKG_NAME elasticsearch-1.4.2
+ENV AWS_PLUGIN_VERSION 2.4.1
 
 # Install ElasticSearch.
 RUN \
@@ -16,6 +17,8 @@ RUN \
   tar xvzf $ES_PKG_NAME.tar.gz && \
   rm -f $ES_PKG_NAME.tar.gz && \
   mv /$ES_PKG_NAME /elasticsearch
+  
+RUN /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/${AWS_PLUGIN_VERSION}
 
 # Define mountable directories.
 VOLUME ["/data"]
