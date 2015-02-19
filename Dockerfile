@@ -1,16 +1,16 @@
 #
-# ElasticSearch Dockerfile
+# Elasticsearch Dockerfile
 #
 # https://github.com/dockerfile/elasticsearch
 #
 
 # Pull base image.
-FROM dockerfile/java:oracle-java7
+FROM dockerfile/java:oracle-java8
 
-ENV ES_PKG_NAME elasticsearch-1.4.2
+ENV ES_PKG_NAME elasticsearch-1.4.4
 ENV AWS_PLUGIN_VERSION 2.4.1
 
-# Install ElasticSearch.
+# Install Elasticsearch.
 RUN \
   cd / && \
   wget https://download.elasticsearch.org/elasticsearch/elasticsearch/$ES_PKG_NAME.tar.gz && \
