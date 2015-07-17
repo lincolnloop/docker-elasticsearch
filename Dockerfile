@@ -7,8 +7,8 @@
 # Pull base image.
 FROM dockerfile/java:oracle-java8
 
-ENV ES_PKG_NAME elasticsearch-1.4.4
-ENV AWS_PLUGIN_VERSION 2.4.1
+ENV ES_PKG_NAME elasticsearch-1.7.0
+ENV AWS_PLUGIN_VERSION 2.7.0
 
 # Install Elasticsearch.
 RUN \
