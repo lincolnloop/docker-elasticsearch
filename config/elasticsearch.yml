@@ -1,3 +1,5 @@
+network:
+  host: _site_
 path:
   data: /data/data
   logs: /data/log
