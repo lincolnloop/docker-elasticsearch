@@ -1,7 +1,8 @@
 FROM debian:jessie
 
-ENV ES_PKG_NAME elasticsearch-1.7.0
-ENV AWS_PLUGIN_VERSION 2.7.0
+ENV ES_VERSION 2.4.1
+ENV SHA1_SUM 575a7ee8cb62f6b96fde9dc465b3c4fe0565fb07
+ENV AWS_PLUGIN_VERSION 2.4.0
 
 # via https://github.com/William-Yeh/docker-java7/blob/master/Dockerfile
 RUN \
@@ -26,24 +27,25 @@ RUN \
 # Install Elasticsearch.
 RUN \
   cd / && \
-  wget https://download.elasticsearch.org/elasticsearch/elasticsearch/$ES_PKG_NAME.tar.gz && \
-  tar xvzf $ES_PKG_NAME.tar.gz && \
-  rm -f $ES_PKG_NAME.tar.gz && \
-  mv /$ES_PKG_NAME /elasticsearch
+  wget --quiet https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.deb && \
+  echo "${SHA1_SUM}  elasticsearch-${ES_VERSION}.deb" > es.sha1 && sha1sum --check es.sha1 && \
+  dpkg -i elasticsearch-${ES_VERSION}.deb && \
+  rm elasticsearch-${ES_VERSION}.deb && \
+  mkdir /data && chown elasticsearch /data
 
-RUN /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/${AWS_PLUGIN_VERSION}
+RUN /usr/share/elasticsearch/bin/plugin install --batch cloud-aws
 
 # Define mountable directories.
 VOLUME ["/data"]
 
 # Mount elasticsearch.yml config
-ADD config/elasticsearch.yml /elasticsearch/config/elasticsearch.yml
+ADD config/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 
 # Define working directory.
 WORKDIR /data
-
+USER elasticsearch
 # Define default command.
-CMD ["/elasticsearch/bin/elasticsearch"]
+CMD ["/usr/share/elasticsearch/bin/elasticsearch", "--default.path.conf=/etc/elasticsearch"]
 
 # Expose ports.
 #   - 9200: HTTP
